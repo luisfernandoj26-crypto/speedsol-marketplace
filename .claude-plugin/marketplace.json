@@ -2,9 +2,9 @@
   "name": "enterprise-ai-marketplace",
   "version": "1.0.0",
   "owner": {
-  "name": "Luis Fernando",
-  "email": "ljaramillo@speedsol.com"
-   }
+    "name": "Luis Fernando",
+    "email": "ljaramillo@speedsol.com"
+  },
   "description": "Internal marketplace for enterprise Claude Code plugins",
   "plugins": [
     {
