@@ -1,7 +1,7 @@
 {
-  "name": "engineering-governance",
-  "version": "1.0.0",
-  "description": "Enterprise AI governance system for .NET teams",
+  "name": "Rules-Corporatives",
+  "version": "1.0.1",
+  "description": "SS AI governance system for .NET teams",
   "components": {
     "agents": "./agents",
     "skills": "./skills",
