@@ -1,10 +1,10 @@
-# 🚀 SpeedSol Marketplace
+# SpeedSol Marketplace
 
 Marketplace de plugins para **Claude Code**, diseñado para centralizar herramientas reutilizables que optimizan flujos de desarrollo, automatización y soporte técnico.
 
 ---
 
-## 📌 Descripción
+## 📌Descripción
 
 Este repositorio funciona como un **Plugin Marketplace** compatible con Claude Code. Permite registrar, distribuir e instalar múltiples plugins desde una única fuente.
 
@@ -12,7 +12,7 @@ Ideal para equipos de desarrollo, soporte técnico y automatización de procesos
 
 ---
 
-## 🧩 Estructura del Proyecto
+## 🧩Estructura del Proyecto
 
 ```
 .
@@ -27,7 +27,7 @@ Ideal para equipos de desarrollo, soporte técnico y automatización de procesos
 
 ---
 
-## ⚙️ Requisitos
+## ⚙️Requisitos
 
 * Tener instalado Claude Code
 * Acceso a terminal
@@ -35,7 +35,7 @@ Ideal para equipos de desarrollo, soporte técnico y automatización de procesos
 
 ---
 
-## 🔌 Instalación del Marketplace
+## Instalación del Marketplace
 
 Ejecuta el siguiente comando en Claude Code:
 
@@ -45,7 +45,7 @@ Ejecuta el siguiente comando en Claude Code:
 
 ---
 
-## 📦 Uso
+##  Uso
 
 Una vez agregado el marketplace, puedes listar los plugins disponibles:
 
@@ -64,7 +64,7 @@ Para instalar un plugin específico:
 ---
 
 
-## 📈 Casos de Uso
+## Casos de Uso
 
 * Automatización de soporte técnico
 * Generación de código
