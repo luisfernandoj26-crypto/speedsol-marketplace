@@ -1,0 +1,22 @@
+{
+  "name": "enterprise-ai-marketplace",
+  "version": "1.0.0",
+  "owner": "SpeedSolutions",
+  "description": "Internal marketplace for enterprise Claude Code plugins",
+  "plugins": [
+    {
+      "name": "engineering-governance",
+      "version": "1.0.0",
+      "source": "./plugins/engineering-governance",
+      "description": "Enterprise AI governance plugin for .NET teams with agents, skills, commands and workflow enforcement",
+      "tags": [
+        "dotnet",
+        "governance",
+        "architecture",
+        "security",
+        "devops",
+        "ai-agents"
+      ]
+    }
+  ]
+}
