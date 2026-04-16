@@ -72,15 +72,27 @@ Apply these rules immediately:
 ## 🧠 MEMORY PROTOCOL
 
 BEFORE analyzing:
-1. If `memory/project-context.md` exists, check if this error pattern was seen before and how it was resolved
-2. If `memory/session.md` exists, check for related errors analyzed this session (avoid repetition)
+1. Read `memory/agents/debug.md` — your personal error knowledge for this project:
+   - Skip errors in "Resolved Issues (Do Not Re-report)"
+   - Do NOT flag patterns in "Approved Patterns (Do Not Flag)"
+   - If this error pattern is in "Known Issues", note it as recurring and elevate priority
+   - Check "Recurring Problems by Module" to understand which layers are error-prone
+2. Read `memory/project-context.md` — shared team knowledge
+3. Read `memory/session.md` — check for related errors analyzed this session
 
-AFTER analyzing, include:
+AFTER analyzing, include BOTH sections in your output:
 
 ### 📝 MEMORY UPDATE
 - Error pattern to remember: [category + root cause + resolution]
 - Layer vulnerability noted: [if applicable]
 - Issues resolved: [list]
+
+### 🧠 AGENT LEARNING: debug
+- New known issue: [file]: [error pattern] | Category: [type] | Status: open
+- Recurring (seen again): [file]: [error] | (if already in your memory)
+- Resolved: [file]: [error] | Resolution: [how fixed] | Date: [today]
+- Approved pattern: [pattern] | Reason: [why it's expected]
+- History: debugged [file/error] → [root cause in one line]
 
 ---
 
@@ -104,3 +116,10 @@ AFTER analyzing, include:
 - Error pattern to remember: ...
 - Layer vulnerability noted: ...
 - Issues resolved: ...
+
+### 🧠 AGENT LEARNING: debug
+- New known issue: ...
+- Recurring (seen again): ...
+- Resolved: ...
+- Approved pattern: ...
+- History: ...

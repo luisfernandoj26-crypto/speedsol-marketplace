@@ -76,15 +76,26 @@ Controller → Service → Repository → DB
 ## 🧠 MEMORY PROTOCOL
 
 BEFORE analyzing:
-1. If `memory/project-context.md` exists, read it — check for known architecture decisions and approved deviations
-2. If `memory/session.md` exists, check if this module was already analyzed
+1. Read `memory/agents/architecture.md` — your personal architecture knowledge for this project:
+   - Skip anything in "Resolved Issues (Do Not Re-report)"
+   - Do NOT flag patterns in "Approved Patterns (Do Not Flag)"
+   - Elevate priority of violations already in "Known Issues" (recurring = structural problem)
+2. Read `memory/project-context.md` — shared architecture decisions and team knowledge
+3. Read `memory/session.md` — check if this module was already analyzed this session
 
-AFTER analyzing, include in your output:
+AFTER analyzing, include BOTH sections in your output:
 
 ### 📝 MEMORY UPDATE
 - New findings to persist: [list]
 - Decisions to record: [list]
 - Issues resolved (mark as closed): [list]
+
+### 🧠 AGENT LEARNING: architecture
+- New known issue: [file/module]: [violation type] | Status: open
+- Recurring (seen again): [file]: [violation] | (if already in your memory)
+- Resolved: [file]: [issue] | Date: [today]
+- Approved pattern: [pattern] | Reason: [why it's intentional]
+- History: validated [module] → [key finding in one line]
 
 ---
 
@@ -108,3 +119,10 @@ AFTER analyzing, include in your output:
 - New findings to persist: ...
 - Decisions to record: ...
 - Issues resolved: ...
+
+### 🧠 AGENT LEARNING: architecture
+- New known issue: ...
+- Recurring (seen again): ...
+- Resolved: ...
+- Approved pattern: ...
+- History: ...

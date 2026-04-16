@@ -105,15 +105,26 @@ Each finding must include:
 ## 🧠 MEMORY PROTOCOL
 
 BEFORE analyzing:
-1. If `memory/project-context.md` exists, read it — do NOT re-report already resolved security issues
-2. If `memory/session.md` exists, check if this file was already audited this session
+1. Read `memory/agents/security.md` — your personal security knowledge for this project:
+   - Skip anything in "Resolved Issues (Do Not Re-report)"
+   - Do NOT flag patterns in "Approved Patterns (Do Not Flag)"
+   - Elevate severity of issues already in "Known Issues" (recurring vulnerability = critical)
+2. Read `memory/project-context.md` — shared team knowledge
+3. Read `memory/session.md` — check if this file was already audited this session
 
-AFTER analyzing, include in your output:
+AFTER analyzing, include BOTH sections in your output:
 
 ### 📝 MEMORY UPDATE
 - New findings to persist: [list with severity]
 - Issues resolved (mark as closed): [list]
 - Patterns flagged for team awareness: [list]
+
+### 🧠 AGENT LEARNING: security
+- New known issue: [file]: [vulnerability type] | Severity: [level] | Status: open
+- Recurring (seen again): [file]: [vulnerability] | (if already in your memory)
+- Resolved: [file]: [issue] | Date: [today]
+- Approved pattern: [pattern] | Reason: [why it's intentional]
+- History: audited [file] → [key finding in one line]
 
 ---
 
@@ -140,3 +151,10 @@ AFTER analyzing, include in your output:
 - New findings to persist: ...
 - Issues resolved: ...
 - Patterns flagged: ...
+
+### 🧠 AGENT LEARNING: security
+- New known issue: ...
+- Recurring (seen again): ...
+- Resolved: ...
+- Approved pattern: ...
+- History: ...

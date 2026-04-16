@@ -90,15 +90,27 @@ Each review must validate:
 ## 🧠 MEMORY PROTOCOL
 
 BEFORE analyzing:
-1. If `memory/project-context.md` exists, read it — check for known workflow decisions or approved deviations
-2. If `memory/team-log.md` exists, check recent workflow-related entries
+1. Read `memory/agents/workflow.md` — your personal workflow knowledge for this project:
+   - Skip anything in "Resolved Issues (Do Not Re-report)"
+   - Do NOT flag patterns in "Approved Patterns (Do Not Flag)"
+   - Elevate priority of violations already in "Known Issues" (recurring workflow issue = team habit)
+   - Note which team members have "Recurring Problems" to contextualize findings
+2. Read `memory/project-context.md` — shared team knowledge
+3. Read `memory/team-log.md` — recent workflow-related entries
 
-AFTER analyzing, include:
+AFTER analyzing, include BOTH sections in your output:
 
 ### 📝 MEMORY UPDATE
 - New findings to persist: [list]
 - Decisions to record: [list]
 - Issues resolved: [list]
+
+### 🧠 AGENT LEARNING: workflow
+- New known issue: [branch/PR]: [violation type] | Status: open
+- Recurring (seen again): [item]: [violation] | (if already in your memory)
+- Resolved: [item]: [issue] | Date: [today]
+- Approved pattern: [pattern] | Reason: [team decision]
+- History: validated [branch/PR] → [key finding in one line]
 
 ---
 
@@ -122,3 +134,10 @@ AFTER analyzing, include:
 - New findings to persist: ...
 - Decisions to record: ...
 - Issues resolved: ...
+
+### 🧠 AGENT LEARNING: workflow
+- New known issue: ...
+- Recurring (seen again): ...
+- Resolved: ...
+- Approved pattern: ...
+- History: ...

@@ -22,9 +22,16 @@ If no arguments provided, analyze the current project context broadly: read `mem
 
 ## 🧠 MEMORY READ (MANDATORY — always do this first)
 
-1. Read `memory/project-context.md` — understand known issues, architecture decisions, resolved items
-2. Read `memory/session.md` — check what was already analyzed this session
-3. Output at the top of your response:
+1. Read `memory/agents/lead.md` — your personal orchestration history for this project
+2. Read the agent memory files for each skill you will activate:
+   - `memory/agents/review.md` (if activating review)
+   - `memory/agents/security.md` (if activating security)
+   - `memory/agents/architecture.md` (if activating architecture)
+   - `memory/agents/debug.md` (if activating debug)
+   - `memory/agents/workflow.md` (if activating workflow)
+3. Read `memory/project-context.md` — shared team knowledge
+4. Read `memory/session.md` — check what was already analyzed this session
+5. Output at the top of your response:
 
 ## 📚 Context Loaded
 [Summarize what you found in memory: existing open issues, recent decisions, files already analyzed]
@@ -117,11 +124,38 @@ For each activated skill, apply its full analysis:
 
 ## 🧠 MEMORY WRITE (MANDATORY — after all analysis)
 
+Include ALL sections below. The `🧠 AGENT LEARNING` sections are per-agent and will be routed automatically by the post-process hook.
+
 ### 📝 MEMORY UPDATE
 - New findings to persist: [all significant findings with file paths]
 - Decisions to record: [team decisions inferred from context]
 - Issues resolved (mark as closed): [list]
 - Session summary: [one line: what was analyzed + key outcome]
+
+### 🧠 AGENT LEARNING: lead
+- New known issue: [file/module]: [multi-skill issue] | Skills involved: [list] | Status: open
+- Recurring (seen again): [file]: [issue] | (if already in lead memory)
+- Resolved: [file]: [issue] | Date: [today]
+- Approved pattern: [pattern] | Reason: [why approved]
+- History: orchestrated [file/module] → skills: [list] → [key outcome in one line]
+
+For each skill activated, also include its dedicated AGENT LEARNING section:
+(The post-process hook routes each section to the correct agent memory file)
+
+### 🧠 AGENT LEARNING: review
+(include only if review skill was activated)
+
+### 🧠 AGENT LEARNING: security
+(include only if security skill was activated)
+
+### 🧠 AGENT LEARNING: architecture
+(include only if architecture skill was activated)
+
+### 🧠 AGENT LEARNING: debug
+(include only if debug skill was activated)
+
+### 🧠 AGENT LEARNING: workflow
+(include only if workflow skill was activated)
 
 ---
 

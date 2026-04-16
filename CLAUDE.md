@@ -42,36 +42,43 @@ plugins/<plugin-name>/
 
 ## Plugin: engineering-governance
 
-Plugin de gobernanza IA para equipos .NET enterprise. Componentes disponibles:
+Plugin de gobernanza IA para equipos .NET enterprise. **Estado: production-ready.**
 
-### Comandos
-| Comando | Agente activado | Propósito |
-|---|---|---|
-| `/review` | review-agent | Análisis de calidad de código |
-| `/security` | security-agent | Detección de vulnerabilidades |
-| `/architecture` | architecture-agent | Validación de diseño de sistema |
-| `/optimize` | optimize-agent | Reducción de verbosidad y tokens |
+Setup por desarrollador (una sola vez):
+```powershell
+./plugins/engineering-governance/hooks/setup.ps1
+```
 
-### Agentes
-- **lead** — Orquestador: decide qué agentes activar y combina sus outputs
-- **review** — Senior .NET reviewer: estructura, malas prácticas, compliance arquitectural
-- **security** — Especialista seguridad .NET + Azure: vulnerabilidades, auth, secrets
-- **architecture** — Validador de diseño: separación de capas, coupling, escalabilidad
-- **optimize** — Optimizador de tokens: reduce verbosidad sin perder precisión técnica
+### Comandos (7)
+| Comando | Propósito |
+|---|---|
+| `/lead` | Orquestador — lee memoria, selecciona skills automáticamente |
+| `/review` | Calidad de código .NET |
+| `/security` | Auditoría de seguridad OWASP + Azure |
+| `/architecture` | Validación de diseño de sistema |
+| `/workflow` | Validación Git/PR/pipeline |
+| `/debug` | Análisis de errores .NET con causa raíz |
+| `/optimize` | Compresión de respuestas (reduce tokens) |
+
+### Skills (7) — todos con frontmatter + políticas inlineadas
+Cada skill (`skills/<name>/SKILL.md`) contiene el prompt completo con políticas de empresa embebidas. El contenido de `config/` está incrustado directamente en cada skill que lo necesita.
+
+### Agentes (5) — subagent system prompts completos
+`lead`, `review`, `security`, `architecture`, `optimize` — reescritos como prompts de sistema invocables por Claude Code.
+
+### Hooks reales (3 scripts PowerShell)
+- `hooks/scripts/pre-process.ps1` — `PreToolUse (Write|Edit)`: bloquea secretos hardcodeados en `.cs`
+- `hooks/scripts/post-process.ps1` — `Stop`: extrae `📝 MEMORY UPDATE` y persiste en memoria
+- `hooks/scripts/error-handler.ps1` — `PostToolUse (Bash)`: registra comandos fallidos en `logs/`
+- `hooks/setup.ps1` — registra los 3 hooks en `.claude/settings.json` (distribuible al equipo)
+
+### Sistema de memoria (3 capas)
+- `memory/project-context.md` — conocimiento acumulado del proyecto (en git, compartido)
+- `memory/team-log.md` — audit trail append-only (en git, compartido)
+- `memory/session.md` — contexto de sesión actual (local, en .gitignore)
 
 ### Políticas (`config/`)
-- `rules.md` — Estándares .NET: MVC, naming (camelCase/PascalCase/I-prefix), ILogger, try/catch en Services
-- `architecture-policy.md` — Flujo obligatorio: Controller → Service → Repository → DB
-- `security-policy.md` — Validación inputs, Azure Key Vault, JWT/Azure AD, Managed Identity
-- `workflow-policy.md` — Git flow: feature/*, hotfix/*, PRs obligatorios, sin commits directos a main
-- `quality-policy.md` — DRY, funciones <50 líneas, deuda técnica documentada
-- `error-policy.md` — Sin stack traces expuestos al cliente
-- `tokens.md` — Reglas de optimización de tokens
-
-### Hooks
-- **pre-process** — Carga config, valida input, rechaza entradas vacías
-- **post-process** — Valida formato de output, aplica optimización de tokens
-- **error-handler** — Maneja fallos sin exponer detalles internos
+Los archivos de `config/` son la fuente de verdad de las reglas. Su contenido está incrustado en los skills. No es necesario editarlos para que los skills funcionen, pero modificarlos requiere actualizar también los skills relevantes.
 
 ## Cómo agregar un nuevo plugin
 
@@ -82,7 +89,8 @@ Plugin de gobernanza IA para equipos .NET enterprise. Componentes disponibles:
 
 ## Estándares de los archivos
 
-- **Skills** (`skills/<name>/SKILL.md`): deben incluir frontmatter YAML con `name` y `description`, usar `$ARGUMENTS` como placeholder de entrada, y definir `OUTPUT FORMAT` explícito
-- **Commands** (`commands/<name>.md`): definir `Purpose`, `Flow` (qué agente/skill usa) y `Output` esperado
-- **Agents** (`agents/<name>.md`): definir `Role`, `Skills Used`, `Responsibilities`, `Does NOT do` y `Behavior Rules`
-- **Policies** (`config/*.md`): documentar reglas como obligatorias con sección `REGLA CRÍTICA` al final
+- **Skills** (`skills/<name>/SKILL.md`): frontmatter YAML obligatorio con `name` y `description`; usar `$ARGUMENTS` como placeholder de entrada; políticas de empresa inlineadas directamente en el prompt; terminar con sección `🧠 MEMORY PROTOCOL` y `📤 OUTPUT FORMAT`
+- **Commands** (`commands/<name>.md`): frontmatter con `description` y `allowed-tools`; invocar el skill correspondiente por nombre; manejar caso sin `$ARGUMENTS`; definir output format esperado
+- **Agents** (`agents/<name>.md`): system prompt completo con rol, herramientas disponibles, reglas de empresa inlineadas, restricciones ("Do NOT do") y output format
+- **Policies** (`config/*.md`): fuente de verdad de las reglas — su contenido debe estar incrustado en los skills que las referencian
+- **Hook scripts** (`hooks/scripts/*.ps1`): leen datos via stdin JSON; exit 0 = permitir, exit 1 = bloquear; siempre registrar en `logs/`

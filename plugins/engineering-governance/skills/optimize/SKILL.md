@@ -76,12 +76,18 @@ Avoid: long introductions, repeated definitions, theoretical explanations, unnec
 ## 🧠 MEMORY PROTOCOL
 
 BEFORE optimizing:
-1. If `memory/session.md` exists, check if this content was already compressed this session
+1. Read `memory/agents/optimize.md` — check if this type of content was already compressed before and what techniques worked best
+2. Read `memory/session.md` — check if this content was already compressed this session
 
-AFTER optimizing, include:
+AFTER optimizing, include BOTH sections in your output:
 
 ### 📝 MEMORY UPDATE
 - Compression applied: [brief note on what was reduced]
+
+### 🧠 AGENT LEARNING: optimize
+- New known issue: N/A (optimize agent does not flag code issues)
+- Approved pattern: [type of content] | Best compression technique: [approach used]
+- History: optimized [content type] → [compression ratio / technique]
 
 ---
 
@@ -97,3 +103,7 @@ AFTER optimizing, include:
 
 ### 📝 MEMORY UPDATE
 - Compression applied: ...
+
+### 🧠 AGENT LEARNING: optimize
+- Approved pattern: ...
+- History: ...

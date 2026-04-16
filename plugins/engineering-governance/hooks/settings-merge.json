@@ -1,0 +1,38 @@
+{
+  "_comment": "Reference template — run setup.ps1 to register these hooks with absolute paths in .claude/settings.json",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -ExecutionPolicy Bypass -File \"PLUGIN_DIR/hooks/scripts/pre-process.ps1\""
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -ExecutionPolicy Bypass -File \"PLUGIN_DIR/hooks/scripts/post-process.ps1\""
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -ExecutionPolicy Bypass -File \"PLUGIN_DIR/hooks/scripts/error-handler.ps1\""
+          }
+        ]
+      }
+    ]
+  }
+}
