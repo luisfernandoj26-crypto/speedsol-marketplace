@@ -1,12 +1,24 @@
-# SOC 2 Readiness Agents
+# auditor-soc2 Plugin
 
-Sistema multi-agente para realizar una **auto-evaluación de controles alineada con SOC 2 Trust Service Criteria** sobre un producto SaaS, incluyendo auditoría de código fuente.
+**Versión:** 1.0.0  
+**Status:** Specification Complete | Implementation Pending  
+**Last Updated:** 2026-04-22
+
+## Overview
+
+`auditor-soc2` es un plugin SOC 2 Type II auditing avanzado que actúa como una firma especializada en certificaciones SOC 2. Proporciona:
+
+- **15 agentes especializados** (compliance + code detection + remediation)
+- **Framework SOC 2 completo** con 15+ controles TSC (Trust Services Criteria)
+- **Auditoría integral** sin modificación de código
+- **Reportes profesionales** con hallazgos, riesgos y recomendaciones
+- **Evidence management** con SHA-256 y retención inmutable
 
 > ⚠️ **Aviso legal importante**
 >
-> Este sistema **no emite informes SOC 2**. Un informe SOC 2 oficial solo puede ser emitido por una firma independiente de contadores públicos (CPA) licenciada siguiendo AICPA AT-C 205. Este sistema produce un **"SOC 2 Readiness Report" / "Informe de Preparación SOC 2"** — una auto-evaluación interna comunicable a clientes bajo NDA.
+> Este sistema **no emite informes SOC 2 oficial**. Un informe SOC 2 oficial solo puede ser emitido por una firma independiente de CPAs licenciada siguiendo AICPA AT-C 205. Este sistema produce un **"SOC 2 Readiness Report"** — una auto-evaluación interna comunicable a clientes bajo NDA.
 >
-> Nunca utilices términos como "SOC 2 Certified" o "SOC 2 Compliant" para referirte al output de este sistema. AICPA protege activamente su marca.
+> Nunca utilices términos como "SOC 2 Certified" o "SOC 2 Compliant" para referirte al output de este sistema.
 
 ---
 
