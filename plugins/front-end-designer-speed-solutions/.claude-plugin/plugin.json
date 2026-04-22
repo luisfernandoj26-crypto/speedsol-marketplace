@@ -1,0 +1,33 @@
+{
+  "name": "front-end-designer-speed-solutions",
+  "version": "1.0.0",
+  "description": "Professional frontend design plugin for Speed Solutions. Provides world-class design system, component library, animations, and accessibility standards for Blazor and React applications.",
+  "author": {
+    "name": "Speed Solutions Design Team",
+    "email": "ljaramillo@speedsol.com.co"
+  },
+  "components": {
+    "agents": {
+      "designer": "agents/designer.md"
+    },
+    "commands": {
+      "design": "commands/design.md"
+    },
+    "config": {
+      "design-system": "config/design-system.md",
+      "component-library": "config/component-library.md",
+      "animation-library": "config/animation-library.md",
+      "accessibility-standards": "config/accessibility-standards.md"
+    }
+  },
+  "tags": [
+    "frontend",
+    "design",
+    "ui-ux",
+    "blazor",
+    "react",
+    "accessibility",
+    "design-system",
+    "component-library"
+  ]
+}

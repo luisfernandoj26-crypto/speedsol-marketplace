@@ -34,6 +34,24 @@
         "devops",
         "ai-agents"
       ]
+    },
+    {
+      "name": "front-end-designer-speed-solutions",
+      "version": "1.0.0",
+      "source": "./plugins/front-end-designer-speed-solutions",
+      "description": "Professional front-end design plugin for Speed Solutions — design system, component library, animations, and WCAG 2.1 Level AA accessibility standards for Blazor and React applications",
+      "tags": [
+        "frontend",
+        "design",
+        "ui-ux",
+        "blazor",
+        "react",
+        "accessibility",
+        "design-system",
+        "component-library",
+        "animations",
+        "wcag"
+      ]
     }
   ]
 }
