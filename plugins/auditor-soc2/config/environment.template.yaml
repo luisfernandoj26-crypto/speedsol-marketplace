@@ -1,0 +1,241 @@
+# =============================================================================
+# SOC 2 READINESS AGENTS — MASTER ENVIRONMENT CONFIGURATION
+# =============================================================================
+# Copy this file to `environment.yaml` and fill in your values.
+# Every agent prompt has a ## RUNTIME PARAMETERS section that references
+# these keys using {{KEY_NAME}} placeholders — replace them before execution.
+# =============================================================================
+
+organization:
+  legal_name: ""                    # e.g. "Acme SAS"
+  trading_name: ""
+  product_in_scope: ""              # Product/service being assessed
+  assessment_period_start: ""       # ISO date, e.g. "2026-01-01"
+  assessment_period_end: ""         # ISO date, e.g. "2026-06-30"
+  report_language: "es"             # "es" | "en"
+  trust_service_criteria_in_scope:
+    - security                      # CC1-CC9 (mandatory)
+    - availability                  # A1
+    - confidentiality               # C1
+    # - processing_integrity        # PI1
+    # - privacy                     # P1-P8
+
+# -----------------------------------------------------------------------------
+# SOURCE CODE & REPOSITORIES
+# -----------------------------------------------------------------------------
+source_code:
+  primary_language: ""              # "typescript" | "python" | "go" | "java"
+  monorepo: false
+  local_checkout_root: ""           # e.g. "/workspace/repos/main-app"
+  repositories:
+    - name: "main-app"
+      url: ""                       # e.g. "https://github.com/acme/main-app"
+      default_branch: "main"
+      local_path: ""                # Absolute path on agent's filesystem
+      stack: ["typescript", "node"]
+      contains: ["backend", "frontend"]
+
+  code_paths:
+    backend: ["src/", "lib/"]
+    frontend: ["web/", "ui/"]
+    iac: ["infra/", "terraform/"]
+    k8s: ["k8s/", "deploy/"]
+    tests: ["tests/", "__tests__/", "spec/"]
+    docs: ["docs/"]
+    excluded: ["node_modules/", "dist/", "build/", "vendor/", ".venv/"]
+
+# -----------------------------------------------------------------------------
+# GIT / SOURCE CONTROL PLATFORM
+# -----------------------------------------------------------------------------
+git_platform:
+  provider: "github"                # "github" | "gitlab" | "bitbucket"
+  organization: ""
+  api_base_url: "https://api.github.com"
+  api_token_env_var: "GITHUB_TOKEN" # Name of env var, NEVER the token itself
+  codeowners_file: ".github/CODEOWNERS"
+  required_reviewers_min: 1
+  protected_branches: ["main", "production", "release/*"]
+
+# -----------------------------------------------------------------------------
+# ENVIRONMENTS
+# -----------------------------------------------------------------------------
+environments:
+  development:
+    url: ""
+    access: "internal_vpn"
+  qa:
+    url: ""                         # e.g. "https://qa.acme.com"
+    access: "internal_vpn"
+    credentials_vault_path: ""
+    health_endpoint: "/health"
+  staging:
+    url: ""
+    access: "internal_vpn"
+    credentials_vault_path: ""
+  production:
+    url: ""                         # Read-only references only
+    access: "break_glass_only"
+
+# -----------------------------------------------------------------------------
+# CLOUD INFRASTRUCTURE
+# -----------------------------------------------------------------------------
+cloud:
+  primary_provider: "aws"           # "aws" | "gcp" | "azure" | "multi"
+  aws:
+    account_ids:
+      dev: ""
+      staging: ""
+      prod: ""
+    regions: ["us-east-1"]
+    readonly_role_arn: ""
+    profile_name: "soc2-readonly"
+  gcp:
+    project_ids: {}
+  azure:
+    subscription_ids: {}
+  kubernetes:
+    clusters:
+      - name: ""
+        context: ""
+        namespace_scope: ["default", "production"]
+
+# -----------------------------------------------------------------------------
+# IDENTITY PROVIDER
+# -----------------------------------------------------------------------------
+identity_provider:
+  type: ""                          # "okta" | "azure_ad" | "google_workspace" | "auth0"
+  api_base_url: ""
+  api_token_env_var: ""
+  admin_group_name: ""
+  mfa_required_groups: ["all"]
+
+# -----------------------------------------------------------------------------
+# OBSERVABILITY & LOGGING
+# -----------------------------------------------------------------------------
+observability:
+  siem: ""                          # "datadog" | "splunk" | "elastic" | "cloudwatch"
+  siem_api_url: ""
+  siem_api_token_env_var: ""
+  log_retention_days: 365
+  required_log_sources:
+    - application_logs
+    - auth_logs
+    - audit_logs
+    - network_logs
+    - database_logs
+  error_tracker: ""                 # "sentry" | "rollbar" | "bugsnag"
+  error_tracker_api_url: ""
+  error_tracker_token_env_var: ""
+  alerting_channels:
+    - type: "pagerduty"
+      integration_key_env_var: ""
+    - type: "slack"
+      webhook_env_var: ""
+
+# -----------------------------------------------------------------------------
+# ISSUE TRACKING
+# -----------------------------------------------------------------------------
+issue_tracker:
+  type: "jira"                      # "jira" | "linear" | "github" | "asana"
+  api_base_url: ""
+  api_token_env_var: ""
+  project_keys:
+    security: "SEC"
+    compliance: "COMP"
+    engineering: "ENG"
+  ticket_labels:
+    soc2_finding: "soc2-finding"
+    remediation: "remediation"
+
+# -----------------------------------------------------------------------------
+# EVIDENCE STORE
+# -----------------------------------------------------------------------------
+evidence_store:
+  type: "s3"                        # "s3" | "gcs" | "azure_blob" | "local_fs" | "git"
+  bucket_or_path: ""                # e.g. "s3://acme-soc2-evidence/"
+  immutable: true                   # Object Lock / retention policy
+  retention_years: 7
+  kms_key_arn: ""
+  path_convention: "{{run_id}}/{{agent}}/{{test_id}}.json"
+  region: "us-east-1"
+
+# -----------------------------------------------------------------------------
+# VULNERABILITY DATA
+# -----------------------------------------------------------------------------
+vulnerability_intel:
+  nvd_api_key_env_var: ""
+  epss_enabled: true
+  kev_catalog_enabled: true
+  osv_enabled: true
+
+# -----------------------------------------------------------------------------
+# SCANNERS & TOOLING
+# -----------------------------------------------------------------------------
+scanners:
+  sast:
+    - name: "semgrep"
+      command: "semgrep"
+      rules_path: "/etc/soc2/semgrep-rules/"
+    - name: "codeql"
+      command: "codeql"
+      databases_path: ""
+  secrets:
+    - name: "gitleaks"
+      command: "gitleaks"
+      config: ".gitleaks.toml"
+    - name: "trufflehog"
+      command: "trufflehog"
+  sca:
+    - name: "osv-scanner"
+      command: "osv-scanner"
+    - name: "trivy"
+      command: "trivy"
+    - name: "syft"
+      command: "syft"
+  iac:
+    - name: "checkov"
+      command: "checkov"
+    - name: "tfsec"
+      command: "tfsec"
+    - name: "kube-linter"
+      command: "kube-linter"
+  container:
+    - name: "trivy"
+      command: "trivy image"
+
+# -----------------------------------------------------------------------------
+# OUTPUT & REPORTING
+# -----------------------------------------------------------------------------
+output:
+  findings_dir: ""                  # e.g. "/workspace/soc2/findings/"
+  reports_dir: ""                   # e.g. "/workspace/soc2/reports/"
+  controls_catalog: ""              # Path to controls.yaml
+  report_template: ""               # Path to report outline
+  signed_manifest: true             # GPG-sign evidence manifests
+
+# -----------------------------------------------------------------------------
+# POLICIES (agent behavior)
+# -----------------------------------------------------------------------------
+policies:
+  agent_execution_mode: "read_only" # "read_only" | "suggest" | "open_pr" | "auto_merge"
+  max_pr_per_run: 10
+  max_tokens_per_finding_analysis: 50000
+  require_human_review_for_severity: ["critical", "high"]
+  fail_closed_on_tool_error: true
+  redact_pii_in_evidence: true
+  pii_redaction_patterns:
+    - "email"
+    - "phone"
+    - "national_id"
+    - "credit_card"
+    - "api_key"
+
+# -----------------------------------------------------------------------------
+# LEGAL / REPORT METADATA
+# -----------------------------------------------------------------------------
+legal:
+  disclaimer_required: true
+  disclaimer_text_key: "internal_self_assessment"
+  signing_authority: ""
+  signing_title: ""
+  nda_required_for_distribution: true

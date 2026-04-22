@@ -1,0 +1,12 @@
+{
+  "name": "auditor-soc2",
+  "version": "1.0.2",
+  "description": "Lightweight SOC 2 auditing tool for applications and AI systems, focused on security, compliance, and governance automation for development teams.",
+  "components": {
+    "agents": "./agents",
+    "skills": "./skills",
+    "config": "./config",
+    "commands": "./commands",
+    "hooks": "./hooks"
+  }
+}

@@ -1,0 +1,419 @@
+# =============================================================================
+# SOC 2 CONTROLS CATALOG
+# =============================================================================
+# Maps each SOC 2 Trust Service Criterion to specific tests executed by agents.
+# Each test maps to exactly one responsible agent. Extend to cover your full scope.
+# =============================================================================
+
+metadata:
+  version: "1.0"
+  framework: "SOC 2 Trust Service Criteria (2017, updated 2022)"
+  last_updated: ""
+
+controls:
+  # ===========================================================================
+  # CC1 — CONTROL ENVIRONMENT
+  # ===========================================================================
+  - control_id: CC1.1
+    tsc_category: security
+    title: "Demonstrates commitment to integrity and ethical values"
+    tests:
+      - test_id: CC1.1-T01
+        name: "Code of conduct acknowledged by all employees"
+        agent: governance_agent
+        frequency: quarterly
+        method: manual_attestation
+        evidence_source: "hr_system::acknowledgments"
+        pass_criteria: "acknowledgment_rate >= 0.95"
+        risk_if_failed: medium
+
+  - control_id: CC1.4
+    tsc_category: security
+    title: "Commitment to attract, develop, and retain competent individuals"
+    tests:
+      - test_id: CC1.4-T01
+        name: "Security awareness training completed annually"
+        agent: governance_agent
+        frequency: annually
+        method: hybrid
+        evidence_source: "lms::completion_records"
+        pass_criteria: "completion_rate >= 0.95"
+        risk_if_failed: medium
+
+  # ===========================================================================
+  # CC2 — COMMUNICATION AND INFORMATION
+  # ===========================================================================
+  - control_id: CC2.1
+    tsc_category: security
+    title: "Obtains or generates relevant quality information"
+    tests:
+      - test_id: CC2.1-T01
+        name: "Security policies documented, versioned, accessible"
+        agent: governance_agent
+        frequency: annually
+        method: automated
+        evidence_source: "docs_repo::policies/"
+        pass_criteria: "all_policies_reviewed_within_12_months == true"
+        risk_if_failed: medium
+
+  # ===========================================================================
+  # CC3 — RISK ASSESSMENT
+  # ===========================================================================
+  - control_id: CC3.2
+    tsc_category: security
+    title: "Identifies and analyzes risks to achievement of objectives"
+    tests:
+      - test_id: CC3.2-T01
+        name: "Risk register maintained and reviewed quarterly"
+        agent: risk_vendor_agent
+        frequency: quarterly
+        method: hybrid
+        evidence_source: "risk_register::entries"
+        pass_criteria: "last_review_age_days < 100"
+        risk_if_failed: high
+
+  - control_id: CC3.4
+    tsc_category: security
+    title: "Identifies and assesses changes that could impact the system"
+    tests:
+      - test_id: CC3.4-T01
+        name: "Change impact assessment for major changes"
+        agent: change_management_agent
+        frequency: per_major_change
+        method: automated
+        evidence_source: "git::prs_with_label::major-change"
+        pass_criteria: "all_have_risk_assessment == true"
+        risk_if_failed: medium
+
+  # ===========================================================================
+  # CC6 — LOGICAL AND PHYSICAL ACCESS CONTROLS
+  # ===========================================================================
+  - control_id: CC6.1
+    tsc_category: security
+    title: "Implements logical access security measures"
+    tests:
+      - test_id: CC6.1-T01
+        name: "MFA enforced on all production and admin access"
+        agent: access_control_agent
+        frequency: daily
+        method: automated
+        evidence_source: "idp::users_without_mfa"
+        pass_criteria: "count == 0"
+        risk_if_failed: critical
+      - test_id: CC6.1-T02
+        name: "No hardcoded secrets in source code"
+        agent: secrets_crypto_agent
+        frequency: on_commit
+        method: automated
+        evidence_source: "gitleaks::high_severity_findings"
+        pass_criteria: "count == 0"
+        risk_if_failed: critical
+      - test_id: CC6.1-T03
+        name: "Password policy meets complexity requirements"
+        agent: access_control_agent
+        frequency: monthly
+        method: automated
+        evidence_source: "idp::password_policy"
+        pass_criteria: "min_length >= 12 AND requires_complexity == true"
+        risk_if_failed: high
+      - test_id: CC6.1-T04
+        name: "SSH keys rotated within 180 days"
+        agent: access_control_agent
+        frequency: monthly
+        method: automated
+        evidence_source: "cloud::ssh_keys"
+        pass_criteria: "max_age_days <= 180"
+        risk_if_failed: medium
+
+  - control_id: CC6.2
+    tsc_category: security
+    title: "Registers and authorizes new users"
+    tests:
+      - test_id: CC6.2-T01
+        name: "New user provisioning follows approval workflow"
+        agent: access_control_agent
+        frequency: monthly
+        method: automated
+        evidence_source: "issue_tracker::onboarding_tickets"
+        pass_criteria: "all_provisions_have_approver == true"
+        risk_if_failed: high
+
+  - control_id: CC6.3
+    tsc_category: security
+    title: "Authorizes, modifies, removes access based on roles"
+    tests:
+      - test_id: CC6.3-T01
+        name: "Quarterly access review completed"
+        agent: access_control_agent
+        frequency: quarterly
+        method: manual_attestation
+        evidence_source: "issue_tracker::ACCESS-REVIEW-*"
+        pass_criteria: "status == 'completed' AND age_days < 100"
+        risk_if_failed: high
+      - test_id: CC6.3-T02
+        name: "Terminated user access revoked within 24 hours"
+        agent: access_control_agent
+        frequency: monthly
+        method: automated
+        evidence_source: "hr::terminations JOIN idp::active_users"
+        pass_criteria: "overlap == 0"
+        risk_if_failed: critical
+
+  - control_id: CC6.6
+    tsc_category: security
+    title: "Implements logical access controls for external threats"
+    tests:
+      - test_id: CC6.6-T01
+        name: "Public endpoints use TLS 1.2+"
+        agent: iac_config_agent
+        frequency: weekly
+        method: automated
+        evidence_source: "tls_scan::public_endpoints"
+        pass_criteria: "tls_1_2_or_higher == true AND weak_ciphers == 0"
+        risk_if_failed: critical
+      - test_id: CC6.6-T02
+        name: "WAF configured on public endpoints"
+        agent: iac_config_agent
+        frequency: monthly
+        method: automated
+        evidence_source: "cloud::waf_config"
+        pass_criteria: "enabled == true AND managed_rules_active == true"
+        risk_if_failed: high
+
+  - control_id: CC6.7
+    tsc_category: security
+    title: "Restricts transmission, movement, removal of information"
+    tests:
+      - test_id: CC6.7-T01
+        name: "Data in transit encrypted with TLS 1.2+"
+        agent: confidentiality_agent
+        frequency: weekly
+        method: automated
+        evidence_source: "tls_scan::all_endpoints"
+        pass_criteria: "weak_protocols_count == 0"
+        risk_if_failed: critical
+      - test_id: CC6.7-T02
+        name: "Data at rest encrypted with AES-256"
+        agent: confidentiality_agent
+        frequency: monthly
+        method: automated
+        evidence_source: "cloud::storage_encryption"
+        pass_criteria: "unencrypted_resources == 0"
+        risk_if_failed: critical
+
+  - control_id: CC6.8
+    tsc_category: security
+    title: "Prevents or detects unauthorized software"
+    tests:
+      - test_id: CC6.8-T01
+        name: "Container images scanned before deploy"
+        agent: iac_config_agent
+        frequency: on_commit
+        method: automated
+        evidence_source: "ci::image_scan_results"
+        pass_criteria: "critical_cves == 0 AND high_cves_blocking == true"
+        risk_if_failed: high
+      - test_id: CC6.8-T02
+        name: "Dependencies free of known critical vulnerabilities"
+        agent: dependencies_license_agent
+        frequency: daily
+        method: automated
+        evidence_source: "osv::scan_results"
+        pass_criteria: "critical_cves_reachable == 0"
+        risk_if_failed: high
+
+  # ===========================================================================
+  # CC7 — SYSTEM OPERATIONS
+  # ===========================================================================
+  - control_id: CC7.1
+    tsc_category: security
+    title: "Uses detection and monitoring procedures"
+    tests:
+      - test_id: CC7.1-T01
+        name: "Centralized logging captures required sources"
+        agent: operations_agent
+        frequency: weekly
+        method: automated
+        evidence_source: "siem::log_sources_health"
+        pass_criteria: "all_required_sources_active == true"
+        risk_if_failed: high
+      - test_id: CC7.1-T02
+        name: "Log retention meets 12-month minimum"
+        agent: operations_agent
+        frequency: monthly
+        method: automated
+        evidence_source: "siem::retention_config"
+        pass_criteria: "retention_days >= 365"
+        risk_if_failed: medium
+
+  - control_id: CC7.2
+    tsc_category: security
+    title: "Monitors system components for anomalies"
+    tests:
+      - test_id: CC7.2-T01
+        name: "Security alerts configured for auth anomalies"
+        agent: operations_agent
+        frequency: monthly
+        method: automated
+        evidence_source: "siem::alert_rules"
+        pass_criteria: "auth_failure_alerts_active == true"
+        risk_if_failed: high
+
+  - control_id: CC7.3
+    tsc_category: security
+    title: "Evaluates security events to determine response"
+    tests:
+      - test_id: CC7.3-T01
+        name: "Incident response plan tested annually"
+        agent: operations_agent
+        frequency: annually
+        method: manual_attestation
+        evidence_source: "docs::incident_response_plan"
+        pass_criteria: "last_tabletop_age_days < 400"
+        risk_if_failed: high
+
+  - control_id: CC7.4
+    tsc_category: security
+    title: "Responds to identified security incidents"
+    tests:
+      - test_id: CC7.4-T01
+        name: "Security incidents logged with RCA within 30 days"
+        agent: operations_agent
+        frequency: monthly
+        method: hybrid
+        evidence_source: "issue_tracker::incident_tickets"
+        pass_criteria: "all_closed_have_rca == true"
+        risk_if_failed: medium
+
+  # ===========================================================================
+  # CC8 — CHANGE MANAGEMENT
+  # ===========================================================================
+  - control_id: CC8.1
+    tsc_category: security
+    title: "Authorizes, designs, develops, tests, approves, implements changes"
+    tests:
+      - test_id: CC8.1-T01
+        name: "PRs to protected branches require peer review"
+        agent: change_management_agent
+        frequency: daily
+        method: automated
+        evidence_source: "git::branch_protection_rules"
+        pass_criteria: "required_reviewers >= 1 AND enforce_admins == true"
+        risk_if_failed: critical
+      - test_id: CC8.1-T02
+        name: "CI tests pass before merge to protected branches"
+        agent: change_management_agent
+        frequency: daily
+        method: automated
+        evidence_source: "git::branch_protection_rules"
+        pass_criteria: "required_status_checks_include_tests == true"
+        risk_if_failed: high
+      - test_id: CC8.1-T03
+        name: "Production deployments require explicit approval"
+        agent: change_management_agent
+        frequency: weekly
+        method: automated
+        evidence_source: "ci::production_deploys"
+        pass_criteria: "all_deploys_have_approver == true"
+        risk_if_failed: high
+      - test_id: CC8.1-T04
+        name: "No direct pushes to production branches"
+        agent: change_management_agent
+        frequency: weekly
+        method: automated
+        evidence_source: "git::commit_log"
+        pass_criteria: "direct_pushes_count == 0"
+        risk_if_failed: high
+      - test_id: CC8.1-T05
+        name: "SAST scan passes on all merged PRs"
+        agent: sast_agent
+        frequency: on_commit
+        method: automated
+        evidence_source: "ci::sast_results"
+        pass_criteria: "critical_findings == 0 AND high_findings_blocking == true"
+        risk_if_failed: high
+
+  # ===========================================================================
+  # CC9 — RISK MITIGATION
+  # ===========================================================================
+  - control_id: CC9.2
+    tsc_category: security
+    title: "Assesses and manages vendor and business partner risks"
+    tests:
+      - test_id: CC9.2-T01
+        name: "Critical vendors have current SOC 2 attestation"
+        agent: risk_vendor_agent
+        frequency: annually
+        method: hybrid
+        evidence_source: "vendor_register::attestations"
+        pass_criteria: "critical_vendors_without_attestation == 0"
+        risk_if_failed: high
+      - test_id: CC9.2-T02
+        name: "DPAs signed with vendors processing customer data"
+        agent: risk_vendor_agent
+        frequency: annually
+        method: manual_attestation
+        evidence_source: "contracts::dpas"
+        pass_criteria: "data_processors_with_dpa_rate == 1.0"
+        risk_if_failed: high
+
+  # ===========================================================================
+  # A1 — AVAILABILITY
+  # ===========================================================================
+  - control_id: A1.2
+    tsc_category: availability
+    title: "Authorizes, designs, operates, monitors availability"
+    tests:
+      - test_id: A1.2-T01
+        name: "Backups daily, tested quarterly"
+        agent: availability_agent
+        frequency: monthly
+        method: automated
+        evidence_source: "cloud::backup_status"
+        pass_criteria: "daily_success_rate >= 0.99 AND last_restore_test_days < 100"
+        risk_if_failed: high
+      - test_id: A1.2-T02
+        name: "DR plan tested annually with RTO/RPO"
+        agent: availability_agent
+        frequency: annually
+        method: manual_attestation
+        evidence_source: "docs::dr_test_reports"
+        pass_criteria: "last_test_age_days < 400 AND rto_met == true"
+        risk_if_failed: high
+      - test_id: A1.2-T03
+        name: "Uptime SLO met during period"
+        agent: availability_agent
+        frequency: monthly
+        method: automated
+        evidence_source: "observability::uptime_metrics"
+        pass_criteria: "uptime_pct >= target_slo"
+        risk_if_failed: medium
+
+  # ===========================================================================
+  # C1 — CONFIDENTIALITY
+  # ===========================================================================
+  - control_id: C1.1
+    tsc_category: confidentiality
+    title: "Identifies and maintains confidential information"
+    tests:
+      - test_id: C1.1-T01
+        name: "Data classification labels enforced in code"
+        agent: confidentiality_agent
+        frequency: quarterly
+        method: hybrid
+        evidence_source: "sast::data_classification_annotations"
+        pass_criteria: "sensitive_endpoints_labeled_rate >= 0.9"
+        risk_if_failed: medium
+
+  - control_id: C1.2
+    tsc_category: confidentiality
+    title: "Disposes of confidential information"
+    tests:
+      - test_id: C1.2-T01
+        name: "Data retention and deletion policy enforced"
+        agent: confidentiality_agent
+        frequency: quarterly
+        method: automated
+        evidence_source: "database::retention_jobs"
+        pass_criteria: "retention_jobs_running == true AND last_run_days < 40"
+        risk_if_failed: medium

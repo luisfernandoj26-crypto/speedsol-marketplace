@@ -1,0 +1,179 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SOC 2 Readiness Finding",
+  "description": "Canonical schema for findings produced by any SOC 2 readiness agent",
+  "type": "object",
+  "required": [
+    "finding_id",
+    "schema_version",
+    "created_at",
+    "created_by_agent",
+    "run_id",
+    "control_mapping",
+    "classification",
+    "status",
+    "severity",
+    "risk_score",
+    "description",
+    "location",
+    "evidence",
+    "remediation",
+    "lifecycle"
+  ],
+  "properties": {
+    "finding_id": {
+      "type": "string",
+      "pattern": "^[A-Z]+-[0-9]{8}-[0-9]{4}$",
+      "description": "Format: {AGENT_PREFIX}-{YYYYMMDD}-{NNNN}"
+    },
+    "schema_version": { "type": "string", "enum": ["1.0"] },
+    "created_at": { "type": "string", "format": "date-time" },
+    "created_by_agent": { "type": "string" },
+    "run_id": { "type": "string", "format": "uuid" },
+    "dedup_key": { "type": "string", "description": "sha256-based stable dedup key" },
+
+    "control_mapping": {
+      "type": "object",
+      "required": ["primary_control", "test_id", "tsc_category"],
+      "properties": {
+        "primary_control": { "type": "string", "pattern": "^(CC[1-9]\\.[0-9]+|A1\\.[0-9]+|C1\\.[0-9]+|PI1\\.[0-9]+|P[1-8]\\.[0-9]+)$" },
+        "test_id": { "type": "string" },
+        "secondary_controls": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "tsc_category": {
+          "type": "string",
+          "enum": ["security", "availability", "confidentiality", "processing_integrity", "privacy"]
+        }
+      }
+    },
+
+    "classification": {
+      "type": "object",
+      "required": ["title", "category"],
+      "properties": {
+        "title": { "type": "string", "maxLength": 120 },
+        "category": {
+          "type": "string",
+          "enum": ["sast", "secret", "dependency", "iac_config", "access", "logging", "change_mgmt", "crypto", "vendor", "availability", "governance"]
+        },
+        "subcategory": { "type": "string" },
+        "cwe": { "type": "string", "pattern": "^CWE-[0-9]+$" },
+        "owasp_top10": { "type": "string" },
+        "cve": { "type": "string", "pattern": "^CVE-[0-9]{4}-[0-9]+$" }
+      }
+    },
+
+    "status": {
+      "type": "string",
+      "enum": ["open", "in_progress", "remediated", "accepted_risk", "false_positive", "compensating_control"]
+    },
+
+    "severity": {
+      "type": "string",
+      "enum": ["critical", "high", "medium", "low", "informational"]
+    },
+
+    "risk_score": {
+      "type": "object",
+      "required": ["composite", "criticality", "exposure", "exploitability", "detectability"],
+      "properties": {
+        "composite": { "type": "number", "minimum": 5, "maximum": 25 },
+        "criticality": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "exposure": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "exploitability": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "detectability": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "overrides_applied": { "type": "array", "items": { "type": "string" } },
+        "compensating_controls": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "description": {
+      "type": "object",
+      "required": ["summary", "impact_if_exploited"],
+      "properties": {
+        "summary": { "type": "string" },
+        "technical_detail": { "type": "string" },
+        "impact_if_exploited": { "type": "string" }
+      }
+    },
+
+    "location": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["code", "infrastructure", "configuration", "policy", "process"]
+        },
+        "repository": { "type": "string" },
+        "file_path": { "type": "string" },
+        "line_start": { "type": ["integer", "null"] },
+        "line_end": { "type": ["integer", "null"] },
+        "commit_sha": { "type": "string" },
+        "resource_id": { "type": "string" },
+        "url": { "type": "string", "format": "uri" }
+      }
+    },
+
+    "evidence": {
+      "type": "object",
+      "required": ["raw_output_ref", "raw_output_sha256"],
+      "properties": {
+        "raw_output_ref": { "type": "string" },
+        "raw_output_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "redacted": { "type": "boolean" },
+        "reproducer": { "type": "string" },
+        "screenshots": { "type": "array", "items": { "type": "string" } },
+        "related_logs": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "remediation": {
+      "type": "object",
+      "required": ["recommendation_summary"],
+      "properties": {
+        "recommendation_summary": { "type": "string" },
+        "recommendation_detail": { "type": "string" },
+        "suggested_fix_available": { "type": "boolean" },
+        "fix_complexity": {
+          "type": "string",
+          "enum": ["trivial", "small", "medium", "large", "architectural"]
+        },
+        "estimated_effort_hours": { "type": "number" },
+        "owner": { "type": "string" },
+        "deadline": { "type": "string", "format": "date" },
+        "linked_pr": { "type": "string", "format": "uri" },
+        "linked_ticket": { "type": "string", "format": "uri" }
+      }
+    },
+
+    "lifecycle": {
+      "type": "object",
+      "required": ["first_detected", "last_observed"],
+      "properties": {
+        "first_detected": { "type": "string", "format": "date-time" },
+        "last_observed": { "type": "string", "format": "date-time" },
+        "observation_count": { "type": "integer", "minimum": 1 },
+        "resolved_at": { "type": ["string", "null"], "format": "date-time" },
+        "resolution_evidence_ref": { "type": ["string", "null"] },
+        "resolution_verified_by_agent": { "type": "boolean" }
+      }
+    },
+
+    "audit_trail": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["timestamp", "actor", "action"],
+        "properties": {
+          "timestamp": { "type": "string", "format": "date-time" },
+          "actor": { "type": "string" },
+          "action": { "type": "string" },
+          "notes": { "type": "string" }
+        }
+      }
+    }
+  }
+}
