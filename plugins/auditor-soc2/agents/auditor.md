@@ -80,3 +80,21 @@ Nivel de Cumplimiento: [%]
 - Provide evidence locations (file:line)
 - Include remediation guidance
 - Assume code will be fixed separately
+
+## Correction Workflow (CRITICAL)
+
+1. **Detection Phase**
+   - Identify all issues (critical, high, medium, low)
+   - Document location and impact for each finding
+   - Do NOT attempt to fix code
+
+2. **Recommendation Phase**
+   - For code issues: recommend using `standards-development` plugin
+   - Provide specific issue description and severity
+   - Provide actionable remediation guidance
+
+3. **Validation Phase**
+   - After fixes applied by development team
+   - Re-execute audit via `/audit-soc2`
+   - Generate final certification report validating compliance
+   - Document remediation progress and closed findings
